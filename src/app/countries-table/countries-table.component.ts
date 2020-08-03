@@ -18,16 +18,20 @@ export class CountriesTableComponent implements OnInit {
       console.log(this.rowData);
     });
   }
+  defaultColDef = {
+    sortable: true,
+    sortingOrder: ['desc', 'asc']
+  }
 
   columnDefs = [
-    {headerName: 'Name', field: 'name' },
-    {headerName: 'New Cases', field: 'newConfirmed' },
+    {headerName: 'Name', field: 'name', sortingOrder: ['asc', 'desc']},
+    {headerName: 'New Cases', field: 'newConfirmed', sort: 'desc'},
     {headerName: 'New Deaths', field: 'newDeaths'},
     {headerName: 'New Recovered', field: 'newRecovered'},
     {headerName: 'Total Cases', field: 'totalConfirmed'},
     {headerName: 'Total Deaths', field: 'totalDeaths'},
     {headerName: 'Total Recovered', field: 'totalRecovered'},
-];
+  ];
 
 // rowData = [
 //     { make: 'Toyota', model: 'Celica', price: 35000 },
