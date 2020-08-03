@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
+import { CountriesTableComponent } from './countries-table/countries-table.component';
 import { HttpClientModule } from '@angular/common/http';
 import { WorldMapComponent } from './components/world-map/world-map.component';
 
@@ -11,7 +12,7 @@ import { COVID_DATA_API_SUB_SERVICE } from './services/covid-data-api.service';
 import { Covid19ApiService } from './services/externalApis/covid-19-api.service';
 
 @NgModule({
-  declarations: [AppComponent, WorldMapComponent],
+  declarations: [AppComponent, CountriesTableComponent, WorldMapComponent],
   imports: [BrowserModule, HttpClientModule],
   providers: [
     { provide: 'MapProvider', useClass: OpenStreetMapProvider },
