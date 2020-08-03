@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { CountriesTableComponent } from './countries-table/countries-table.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { CountriesTableComponent } from './countries-table/countries-table.compo
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AgGridModule.withComponents([])
   ],
   providers: [],
