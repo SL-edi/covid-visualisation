@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {CountriesTableService} from './service/countries-table.service';
+import { CountriesTableService } from './service/countries-table.service';
+import { Country } from './service/model';
 
 @Component({
   selector: 'app-countries-table',
@@ -7,25 +8,31 @@ import {CountriesTableService} from './service/countries-table.service';
   styleUrls: ['./countries-table.component.scss']
 })
 export class CountriesTableComponent implements OnInit {
+  rowData: Country[];
 
   constructor(private countriesService: CountriesTableService) { }
 
   ngOnInit(): void {
     this.countriesService.getCountryData().subscribe((data) => {
-      console.log(data)
+      this.rowData = data;
+      console.log(this.rowData);
     });
   }
 
   columnDefs = [
-    {headerName: 'Make', field: 'make' },
-    {headerName: 'Model', field: 'model' },
-    {headerName: 'Cost', field: 'price'}
+    {headerName: 'Name', field: 'name' },
+    {headerName: 'New Cases', field: 'newConfirmed' },
+    {headerName: 'New Deaths', field: 'newDeaths'},
+    {headerName: 'New Recovered', field: 'newRecovered'},
+    {headerName: 'Total Cases', field: 'totalConfirmed'},
+    {headerName: 'Total Deaths', field: 'totalDeaths'},
+    {headerName: 'Total Recovered', field: 'totalRecovered'},
 ];
 
-rowData = [
-    { make: 'Toyota', model: 'Celica', price: 35000 },
-    { make: 'Ford', model: 'Mondeo', price: 32000 },
-    { make: 'Porsche', model: 'Boxter', price: 72000 }
-];
+// rowData = [
+//     { make: 'Toyota', model: 'Celica', price: 35000 },
+//     { make: 'Ford', model: 'Mondeo', price: 32000 },
+//     { make: 'Porsche', model: 'Boxter', price: 72000 }
+// ];
 
 }
