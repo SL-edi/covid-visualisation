@@ -21,6 +21,8 @@
     "@angular/router": "~10.0.4",
     "country-finder": "^1.0.8",
     "leaflet": "1.5.1",
+    "ag-grid-angular": "^23.2.1",
+    "ag-grid-community": "^23.2.1",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
