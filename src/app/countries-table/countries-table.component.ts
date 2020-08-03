@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-// import {CountriesDataService} from '../countries-data.service';
+import {CountriesTableService} from './service/countries-table.service';
 
 @Component({
   selector: 'app-countries-table',
@@ -8,13 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CountriesTableComponent implements OnInit {
 
-  // constructor(private countriesService: CountriesDataService) { }
-  constructor() { }
+  constructor(private countriesService: CountriesTableService) { }
 
   ngOnInit(): void {
-    // this.countriesService.getData().subscribe((data) => {
-    //   console.log(data)
-    // });
+    this.countriesService.getCountryData().subscribe((data) => {
+      console.log(data)
+    });
   }
 
   columnDefs = [
