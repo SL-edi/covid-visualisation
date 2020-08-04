@@ -1,5 +1,6 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import * as L from 'leaflet';
+import { TemplateDefinitionBuilder } from '@angular/compiler/src/render3/view/template';
 
 @Component({
   selector: 'app-world-map',
@@ -7,9 +8,9 @@ import * as L from 'leaflet';
   styleUrls: ['./world-map.component.scss'],
 })
 export class WorldMapComponent implements AfterViewInit {
-  private map;
-
-  constructor() {}
+  private map: L.Map | L.LayerGroup<any>;
+  @Input() latitude: number;
+  @Input() longitude: number;
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -17,7 +18,7 @@ export class WorldMapComponent implements AfterViewInit {
 
   private initMap(): void {
     this.map = L.map('map', {
-      center: [51.0, 0.0],
+      center: [this.latitude, this.longitude],
       zoom: 3,
     });
     const tiles = L.tileLayer(
