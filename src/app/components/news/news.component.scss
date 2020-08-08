@@ -1,0 +1,24 @@
+ul {
+  padding: 0;
+  li {
+    list-style-type: none;
+  }
+}
+
+.header {
+  background-color: #a0a0a0;
+  a {
+    display: block;
+    padding: 2px 5px;
+    text-decoration: unset;
+    color: black;
+    font-size: 1.5em;
+  }
+  &:hover {
+    font-weight: bold;
+  }
+}
+
+p {
+  font-style: italic;
+}
