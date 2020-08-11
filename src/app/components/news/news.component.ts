@@ -9,24 +9,23 @@ import { News } from '../../models/News';
 })
 export class NewsComponent implements OnInit {
   news: News[];
-  region: string;
-  subscription: any;
+  countries = ['global', 'GB'];  
 
   constructor(@Inject('NewsService') private newsService: NewsService) {}
 
   ngOnInit(): void {
-    this.subscription = this.newsService.getNews().subscribe(
+    this.getNews(this.countries[0]);
+  }
+
+  onCountryChange(country: string) {
+    this.getNews(country);
+  }
+
+  getNews(region: string): void {
+    this.newsService.getNews(region).subscribe(
       news => {
         this.news = news;
       });
-    this.newsService.getRegionSwitcher().subscribe(region =>
-    {
-      this.subscription.unsubscribe();
-      this.subscription = this.newsService.getNews().subscribe(
-      news => {
-        this.news = news;
-      });
-    });
   }
 
 }

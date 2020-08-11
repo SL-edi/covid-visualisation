@@ -1,5 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { NewsService } from 'src/app/services/news.service';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-country-select',
@@ -7,16 +6,16 @@ import { NewsService } from 'src/app/services/news.service';
   styleUrls: ['./country-select.component.scss']
 })
 export class CountrySelectComponent implements OnInit {
-  countries = ['global', 'GB'];
-  selectedCountry: string = this.countries[0];
+  @Input() countries : string[];
+  @Output() selectedCountry = new EventEmitter<string>();
 
-  constructor(@Inject('NewsService') private newsService: NewsService) { }
+  constructor() { }
 
   onChange(value: string): void {
-    this.newsService.changeRegion(value);
+    console.log(`Country Select Component: ${value}`);
+    this.selectedCountry.emit(value);
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
 }

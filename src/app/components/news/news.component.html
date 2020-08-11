@@ -1,3 +1,7 @@
+<app-country-select 
+  [countries]="countries" 
+  (selectedCountry)="onCountryChange($event)">
+</app-country-select>
 <h1>News</h1>
 <ul>
   <li *ngFor="let newsItem of news">
