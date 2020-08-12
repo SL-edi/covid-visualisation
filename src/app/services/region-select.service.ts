@@ -17,7 +17,7 @@ export class RegionSelectService {
     this.subscription.next(region);
   }
 
-  getSubscription(): Subject<string> {
+  getRegionObserver(): Subject<string> {
     return this.subscription;
   }
 

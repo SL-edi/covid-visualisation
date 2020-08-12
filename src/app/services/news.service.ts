@@ -1,57 +1,55 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, from, Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { News } from '../models/News';
+import { RegionSelectService } from './region-select.service';
 
 export interface NewsService {
-  getNews(region: string): Observable<News[]>;
+  getNewsObserver(): Subject<News[]>;
 }
 
 @Injectable({
   providedIn: 'root'
 })
-export class DummyNewsService implements NewsService {
-  getNews(region: string): Observable<News[]>  {
-    return from([[
-      {
-        url: 'http://www.google.com',
-        title: 'COVID kills',
-        description: 'Dumb ppl still not wearing masks.'
-      },
-      {
-        url: 'http://www.bridgebase.com/v3',
-        title: 'Moron dies after injecting himself with bleach',
-        description: 'Trump claims injecting bleach as a COVID treatment is "very, very bad"'
+export class SmartableAiNewsService implements NewsService {
+  private url = 'https://api.smartable.ai/coronavirus/news/';
+  private subscriptionKey = '955eacf9525e45dd8d46a07b7daa649e';
+  private newsObserver: Subject<News[]>;
+  private httpGetSubscription: Subscription;
+
+  constructor(private httpClient: HttpClient, private regionService: RegionSelectService) {
+    this.newsObserver = new Subject<News[]>();
+    this.httpGetSubscription = this.getSubscription(regionService.getRegion());
+    regionService.getRegionObserver().subscribe(
+      region => {
+        this.httpGetSubscription?.unsubscribe();
+        this.httpGetSubscription = this.getSubscription(region);
       }
-    ]]);
+    );
   }
-}
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ActualNewsService implements NewsService {
-  url = 'https://api.smartable.ai/coronavirus/news/';
-  subscriptionKey = '955eacf9525e45dd8d46a07b7daa649e';
-  region = 'global';
+  getNewsObserver(): Subject<News[]> {
+    return this.newsObserver;
+  }
 
-  constructor(private httpClient: HttpClient) {}
-
-  getNews(region: string): Observable<News[]> {
+  private getSubscription(region: string): Subscription {
     return this.httpClient
       .get(
         this.url + region,
         {
           headers: { 'Subscription-Key': this.subscriptionKey }
         })
-      .pipe(map((response: {news: any}) =>
+      .pipe(map((response: { news: any }) =>
         response.news.map(
           ({ title, excerpt, webUrl }: { title: string, excerpt: string, webUrl: string }) => ({
-          title,
-          url: webUrl,
-          description: excerpt
-        }))
-      ));
+            title,
+            url: webUrl,
+            description: excerpt
+          }))
+      ))
+      .subscribe(
+        news => { this.newsObserver.next(news); }
+      );
   }
 }

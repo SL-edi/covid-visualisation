@@ -1,4 +1,3 @@
 <select [(ngModel)]="selectedCountry" (change)="onChange($event.target.value)">
   <option *ngFor="let country of countries" [value]="country">{{country}}</option>
 </select>
-<p>{{selectedCountry}}</p>

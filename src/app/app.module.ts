@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { NewsComponent } from './components/news/news.component';
 import { CountrySelectComponent } from './components/country-select/country-select.component';
 
-import { ActualNewsService } from './services/news.service';
+import { SmartableAiNewsService } from './services/news.service';
 import { RegionSelectService } from './services/region-select.service';
 
 @NgModule({
@@ -21,7 +21,7 @@ import { RegionSelectService } from './services/region-select.service';
     FormsModule,
     HttpClientModule
   ],
-  providers: [{ provide: 'NewsService', useClass: ActualNewsService }, RegionSelectService],
+  providers: [{ provide: 'NewsService', useClass: SmartableAiNewsService }, RegionSelectService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
