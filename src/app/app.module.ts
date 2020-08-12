@@ -8,6 +8,7 @@ import { NewsComponent } from './components/news/news.component';
 import { CountrySelectComponent } from './components/country-select/country-select.component';
 
 import { ActualNewsService } from './services/news.service';
+import { RegionSelectService } from './services/region-select.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,7 @@ import { ActualNewsService } from './services/news.service';
     FormsModule,
     HttpClientModule
   ],
-  providers: [{ provide: 'NewsService', useClass: ActualNewsService }],
+  providers: [{ provide: 'NewsService', useClass: ActualNewsService }, RegionSelectService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

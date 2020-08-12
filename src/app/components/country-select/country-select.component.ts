@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { NewsService } from 'src/app/services/news.service';
+import { Component, OnInit } from '@angular/core';
+import { RegionSelectService } from 'src/app/services/region-select.service';
 
 @Component({
   selector: 'app-country-select',
@@ -10,10 +10,10 @@ export class CountrySelectComponent implements OnInit {
   countries = ['global', 'GB'];
   selectedCountry: string = this.countries[0];
 
-  constructor(@Inject('NewsService') private newsService: NewsService) { }
+  constructor(private regionService: RegionSelectService) { }
 
   onChange(value: string): void {
-    this.newsService.changeRegion(value);
+    this.regionService.setRegion(value);
   }
 
   ngOnInit(): void {

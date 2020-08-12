@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { NewsService } from '../../services/news.service';
 import { News } from '../../models/News';
+import { RegionSelectService } from 'src/app/services/region-select.service';
 
 @Component({
   selector: 'app-news',
@@ -12,17 +13,17 @@ export class NewsComponent implements OnInit {
   region: string;
   subscription: any;
 
-  constructor(@Inject('NewsService') private newsService: NewsService) {}
+  constructor(@Inject('NewsService') private newsService: NewsService, private regionService: RegionSelectService) {}
 
   ngOnInit(): void {
-    this.subscription = this.newsService.getNews().subscribe(
+    this.subscription = this.newsService.getNews(this.regionService.getRegion()).subscribe(
       news => {
         this.news = news;
       });
-    this.newsService.getRegionSwitcher().subscribe(region =>
+    this.regionService.getSubscription().subscribe(region =>
     {
       this.subscription.unsubscribe();
-      this.subscription = this.newsService.getNews().subscribe(
+      this.subscription = this.newsService.getNews(region).subscribe(
       news => {
         this.news = news;
       });

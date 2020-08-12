@@ -5,20 +5,14 @@ import { map } from 'rxjs/operators';
 import { News } from '../models/News';
 
 export interface NewsService {
-  getNews(): Observable<News[]>;
-  getRegionSwitcher(): Subject<string>;
-  changeRegion(region: string): void;
+  getNews(region: string): Observable<News[]>;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class DummyNewsService implements NewsService {
-  getRegionSwitcher(): Subject<string> {
-    return new Subject<string>();
-  }
-  changeRegion(region: string): void {}
-  getNews(): Observable<News[]>  {
+  getNews(region: string): Observable<News[]>  {
     return from([[
       {
         url: 'http://www.google.com',
@@ -41,17 +35,13 @@ export class ActualNewsService implements NewsService {
   url = 'https://api.smartable.ai/coronavirus/news/';
   subscriptionKey = '955eacf9525e45dd8d46a07b7daa649e';
   region = 'global';
-  regionSwitcher: Subject<string>;
 
-  constructor(private httpClient: HttpClient) {
-    this.regionSwitcher = new Subject<string>();
-    this.regionSwitcher.next(this.region);
-  }
+  constructor(private httpClient: HttpClient) {}
 
-  getNews(): Observable<News[]> {
+  getNews(region: string): Observable<News[]> {
     return this.httpClient
       .get(
-        this.url + this.region,
+        this.url + region,
         {
           headers: { 'Subscription-Key': this.subscriptionKey }
         })
@@ -63,14 +53,5 @@ export class ActualNewsService implements NewsService {
           description: excerpt
         }))
       ));
-  }
-
-  changeRegion(region: string): void {
-    this.region = region;
-    this.regionSwitcher.next(region);
-  }
-
-  getRegionSwitcher(): Subject<string> {
-    return this.regionSwitcher;
   }
 }
