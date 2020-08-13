@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Inject } from '@angular/core';
-import * as L from 'leaflet';
+import { map, Map, tileLayer } from 'leaflet';
 import { MapProvider } from 'src/app/services/map-provider.service';
 
 import { MapLocation } from '../../models/MapLocation';
@@ -10,12 +10,13 @@ import { MapLocation } from '../../models/MapLocation';
   styleUrls: ['./world-map.component.scss'],
 })
 export class WorldMapComponent implements AfterViewInit {
-  private map: L.Map;
+  private map: Map;
   private location: MapLocation = {
     latitude: 0.0,
     longitude: 0.0,
     zoom: 1
   };
+  maxZoom = 19;
   private mapSelector = 'map';
 
   constructor(
@@ -27,14 +28,14 @@ export class WorldMapComponent implements AfterViewInit {
   }
 
   private initMap(): void {
-    this.map = L.map(this.mapSelector, {
+    this.map = map(this.mapSelector, {
       center: [this.location.latitude, this.location.longitude],
       zoom: this.location.zoom,
     });
-    const tiles = L.tileLayer(
+    const tiles = tileLayer(
       this.mapProvider.url,
       {
-        maxZoom: 19,
+        maxZoom: this.maxZoom,
         attribution: this.mapProvider.copyright
       }
     );
