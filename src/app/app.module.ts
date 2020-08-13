@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { NewsComponent } from './components/news/news.component';
-import { CountrySelectComponent } from './components/country-select/country-select.component';
+import { RegionSelectComponent } from './components/region-select/region-select.component';
 
 import { SmartableAiNewsService } from './services/news.service';
 import { RegionSelectService } from './services/region-select.service';
@@ -14,7 +14,7 @@ import { RegionSelectService } from './services/region-select.service';
   declarations: [
     AppComponent,
     NewsComponent,
-    CountrySelectComponent
+    RegionSelectComponent
   ],
   imports: [
     BrowserModule,

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { News } from '../models/News';
 import { RegionSelectService } from './region-select.service';
+import { Region } from '../models/Region';
 
 export interface NewsService {
-  getNewsObserver(): Subject<News[]>;
+  getNewsObservable(): Subject<News[]>;
 }
 
 @Injectable({
@@ -16,27 +17,25 @@ export class SmartableAiNewsService implements NewsService {
   private url = 'https://api.smartable.ai/coronavirus/news/';
   private subscriptionKey = '955eacf9525e45dd8d46a07b7daa649e';
   private newsObserver: Subject<News[]>;
-  private httpGetSubscription: Subscription;
 
   constructor(private httpClient: HttpClient, private regionService: RegionSelectService) {
     this.newsObserver = new Subject<News[]>();
-    this.httpGetSubscription = this.getSubscription(regionService.getRegion());
-    regionService.getRegionObserver().subscribe(
+    this.getSubscription(regionService.getRegion());
+    regionService.getRegionObservable().subscribe(
       region => {
-        this.httpGetSubscription?.unsubscribe();
-        this.httpGetSubscription = this.getSubscription(region);
+        this.getSubscription(region);
       }
     );
   }
 
-  getNewsObserver(): Subject<News[]> {
+  getNewsObservable(): Subject<News[]> {
     return this.newsObserver;
   }
 
-  private getSubscription(region: string): Subscription {
-    return this.httpClient
+  private getSubscription(region: Region): void {
+    this.httpClient
       .get(
-        this.url + region,
+        this.url + region.code,
         {
           headers: { 'Subscription-Key': this.subscriptionKey }
         })
