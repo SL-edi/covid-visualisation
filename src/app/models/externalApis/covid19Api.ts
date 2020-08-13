@@ -1,10 +1,10 @@
 export interface GlobalDataPoint {
-  NewConfirmed: Number,
-  TotalConfirmed: Number,
-  NewDeaths: Number,
-  TotalDeaths: Number,
-  NewRecovered: Number,
-  TotalRecovered: Number
+  NewConfirmed: number,
+  TotalConfirmed: number,
+  NewDeaths: number,
+  TotalDeaths: number,
+  NewRecovered: number,
+  TotalRecovered: number
 }
 
 export interface CountryDataPoint extends GlobalDataPoint {

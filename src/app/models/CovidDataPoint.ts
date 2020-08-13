@@ -4,29 +4,26 @@ import isoLookup from 'iso-3166-1';
 export class CovidDataPoint {
   readonly location: string;
   readonly date: string;
-  readonly confirmed: Number;
-  readonly dead: Number;
-  readonly recovered: Number;
 
   /**
    * Holds Covid case data for a location for a date
    * 
-   * @param {string}  location    The location corresponding to the data in alpha2 format or "Global"
+   * @param {string}  location    The location (not case sensitive) corresponding to the data ideally in alpha2/alpha3 format or "global". Using the country name is also possible but is not as reliable due to spelling differences.
    * @param {Date}    date        The date corresponding to the data as UTC string format
-   * @param {Number}  confirmed   The total confirmed cases up to the date
-   * @param {Number}  dead        The total dead cases up to the date
-   * @param {Number}  recovered   The total recovered cases up to the date
+   * @param {number}  confirmed   The total confirmed cases up to the date
+   * @param {number}  dead        The total dead cases up to the date
+   * @param {number}  recovered   The total recovered cases up to the date
    */
   constructor(
     location: string,
     date: Date,
-    confirmed: Number,
-    dead: Number,
-    recovered: Number
+    readonly confirmed: number,
+    readonly dead: number,
+    readonly recovered: number
   ) {
     if (location.length === 2 ) {
       this.location = isoLookup.whereAlpha2(location).alpha2;
-    } else if (location === "Global") {
+    } else if (location.toLowerCase() === "global") {
       this.location = "Global"
     } else if (location.length === 3) {
       this.location = isoLookup.whereAlpha3(location.toUpperCase()).alpha2
