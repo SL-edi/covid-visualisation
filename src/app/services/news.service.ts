@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,6 +9,8 @@ import { Region } from '../models/Region';
 export interface NewsService {
   getNewsObservable(): Subject<News[]>;
 }
+
+export const NEWS_SERVICE = new InjectionToken<NewsService>('NewsService');
 
 interface SmartableAiResponse { title: string; excerpt: string; webUrl: string; }
 

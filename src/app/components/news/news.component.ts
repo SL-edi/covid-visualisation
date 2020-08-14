@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { NewsService } from '../../services/news.service';
+import { NEWS_SERVICE, NewsService } from '../../services/news.service';
 import { News } from '../../models/News';
-import { NEWS_SERVICE } from 'src/app/injection-tokens';
 
 @Component({
   selector: 'app-news',
