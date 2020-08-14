@@ -1,4 +1,4 @@
-import isoLookup from 'iso-3166-1';
+import { byCountryCode, byName } from 'country-finder';  
 
 /** Holds total case data for a location *(in alpha2 format)* on a date *(in UTC string format)* */
 export class CovidDataPoint {
@@ -22,13 +22,13 @@ export class CovidDataPoint {
     readonly recovered: number
   ) {
     if (location.length === 2 ) {
-      this.location = isoLookup.whereAlpha2(location).alpha2;
+      this.location = byCountryCode(location).iso2;
     } else if (location.toLowerCase() === "global") {
       this.location = "Global"
     } else if (location.length === 3) {
-      this.location = isoLookup.whereAlpha3(location.toUpperCase()).alpha2
+      this.location = byCountryCode(location).iso2;
     } else {
-      this.location = isoLookup.whereCountry(location).alpha2
+      this.location = byName(location).iso2;
     }
     this.date = date.toUTCString();
     this.confirmed = confirmed;

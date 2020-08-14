@@ -19,7 +19,7 @@
     "@angular/platform-browser": "~10.0.4",
     "@angular/platform-browser-dynamic": "~10.0.4",
     "@angular/router": "~10.0.4",
-    "iso-3166-1": "^2.0.1",
+    "country-finder": "^1.0.8",
     "leaflet": "1.5.1",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",

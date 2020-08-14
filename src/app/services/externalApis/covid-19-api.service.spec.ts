@@ -5,10 +5,10 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
+import { Country } from '../covid-data-api.service';
+import { byCountryCode } from 'country-finder';
 
 
-import isoLookup from 'iso-3166-1';
-import { Country } from 'iso-3166-1/dist/iso-3166';
 
 describe('Covid19ApiService', () => {
   let apiService: Covid19ApiService;
@@ -65,10 +65,13 @@ describe('Covid19ApiService', () => {
   };
 
   const unknownCountry: Country = {
-    country: "Atlantis",
-    alpha2: "Unmatchable",
-    alpha3: "Unmatchable",
-    numeric: "Unmatchable"
+    id: 0,
+    name: "Atlantis",
+    iso2: "Unmatchable",
+    iso3: "Unmatchable",
+    continent: "Unmatchable",
+    lat: "181",
+    long: "181"
   }
 
   beforeEach(() => {
@@ -132,7 +135,7 @@ describe('Covid19ApiService', () => {
     it('GET country data in the CovidDataPoint format', () => {
       const responseCountryIndex = 1;
       const countryData = sampleSummaryResponse.Countries[responseCountryIndex];
-      const country = isoLookup.whereAlpha2(countryData.CountryCode);
+      const country = byCountryCode(countryData.CountryCode);
 
       apiService.getLatestCountryData(country).subscribe((data) => {
         const expectedDate = new Date(sampleSummaryResponse.Date).toUTCString();

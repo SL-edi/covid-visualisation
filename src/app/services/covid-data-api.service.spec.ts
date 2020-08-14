@@ -1,10 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CovidDataApiService } from './covid-data-api.service';
+import { CovidDataApiService, Country } from './covid-data-api.service';
 import { Covid19ApiService } from './externalApis/covid-19-api.service';
 import { of } from 'rxjs';
 
-import { Country } from 'iso-3166-1/dist/iso-3166';
 import { CovidDataPoint } from '../models/CovidDataPoint';
 
 describe('CovidDataApiService', () => {
@@ -14,11 +13,14 @@ describe('CovidDataApiService', () => {
   const latestGlobalDataResponse = 'getLatestGlobalData';
   const latestCountryDataResponse = 'getLatestCountryData';
   const stubCountry: Country = {
-    country: 'stub country',
-    alpha2: 'SB',
-    alpha3: 'STB',
-    numeric: '000',
-  };
+    id: 0,
+    name: "Stub",
+    iso2: "ST",
+    iso3: "STB",
+    continent: "Stub",
+    lat: "000",
+    long: "000"
+  }
 
   beforeEach(() => {
     // create a spy for the inner service functions

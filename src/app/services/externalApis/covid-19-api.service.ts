@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import { CovidDataApiSubService } from '../covid-data-api.service';
+import { CovidDataApiSubService, Country } from '../covid-data-api.service';
 import { HttpClient } from '@angular/common/http';
-import { Country } from 'iso-3166-1/dist/iso-3166';
 import { CovidDataPoint } from '../../models/CovidDataPoint';
 import { Observable, EMPTY } from 'rxjs';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 export const missingCountryError = (country: Country) =>
   new Error(
-    `No matching country code found in response for code: ${country.alpha2}, country ${country.country}`
+    `No matching country code found in response for code: ${country.iso2}, country ${country.name}`
   );
 
 interface GlobalDataPoint {
@@ -63,13 +62,13 @@ export class Covid19ApiService implements CovidDataApiSubService {
     return this.http.get<SummaryResponse>(`${this.baseUrl}summary`).pipe(
       map<SummaryResponse, CovidDataPoint>((summary) => {
         const countryData = summary.Countries.find(
-          (cData) => cData.CountryCode === country.alpha2
+          (cData) => cData.CountryCode === country.iso2
         );
 
         if (countryData === undefined) throw missingCountryError(country);
 
         return new CovidDataPoint(
-          country.alpha2,
+          country.iso2,
           new Date(summary.Date),
           countryData.TotalConfirmed,
           countryData.TotalDeaths,

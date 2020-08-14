@@ -2,9 +2,18 @@ import { Injectable, Inject } from '@angular/core';
 import { Covid19ApiService } from './externalApis/covid-19-api.service';
 import { CovidDataPoint } from '../models/CovidDataPoint';
 
-import iso, { Country } from 'iso-3166-1/dist/iso-3166';
-import isoLookup from 'iso-3166-1';
 import { Observable } from 'rxjs';
+
+export interface Country {
+  // TODO: Move this somewhere where it makes more sense (maybe the country picker component)
+  id: number,
+  name: string,
+  iso2: string,
+  iso3: string,
+  continent: string,
+  lat: string,
+  long: string
+}
 
 export interface CovidDataApiSubService {
   getLatestGlobalData(): Observable<CovidDataPoint>;
