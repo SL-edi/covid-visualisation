@@ -1,46 +1,61 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CovidDataApiService, Country } from './covid-data-api.service';
-import { Covid19ApiService } from './externalApis/covid-19-api.service';
-import { of } from 'rxjs';
+import {
+  CovidDataApiService,
+  Country,
+  COVID_DATA_API_SUB_SERVICE,
+  CovidDataApiSubService,
+  missingCountryError,
+} from './covid-data-api.service';
+import { of, EMPTY } from 'rxjs';
 
 import { CovidDataPoint } from '../models/CovidDataPoint';
+import { map } from 'rxjs/operators';
 
 describe('CovidDataApiService', () => {
   let service: CovidDataApiService;
-  let dependancyServiceSpy: jasmine.SpyObj<Covid19ApiService>;
+  let dependancyServiceSpies: jasmine.SpyObj<CovidDataApiSubService>[];
 
   const latestGlobalDataResponse = 'getLatestGlobalData';
   const latestCountryDataResponse = 'getLatestCountryData';
   const stubCountry: Country = {
     id: 0,
-    name: "Stub",
-    iso2: "ST",
-    iso3: "STB",
-    continent: "Stub",
-    lat: "000",
-    long: "000"
-  }
+    name: 'Stub',
+    iso2: 'ST',
+    iso3: 'STB',
+    continent: 'Stub',
+    lat: '000',
+    long: '000',
+  };
 
   beforeEach(() => {
-    // create a spy for the inner service functions
-    const spy = jasmine.createSpyObj('Covid19ApiService', [
-      'getLatestGlobalData',
-      'getLatestCountryData',
-    ]);
+    const createSubServiceSpy = (
+      i = 1
+    ): jasmine.SpyObj<CovidDataApiSubService> =>
+      jasmine.createSpyObj(`CovidApiSubService${i}`, [
+        'getLatestGlobalData',
+        'getLatestCountryData',
+      ]);
 
-    // provide and inject spy/mock instead of dependency 
+    // create spies for the inner service functions
+    const spy1 = createSubServiceSpy(1);
+    const spy2 = createSubServiceSpy(2);
+
+    // provide and inject spy/mock instead of dependency
     TestBed.configureTestingModule({
       providers: [
-        Covid19ApiService,
-        { provide: Covid19ApiService, useValue: spy },
+        { provide: COVID_DATA_API_SUB_SERVICE, useValue: spy1, multi: true },
+        { provide: COVID_DATA_API_SUB_SERVICE, useValue: spy2, multi: true },
       ],
     });
 
     service = TestBed.inject(CovidDataApiService);
-    dependancyServiceSpy = TestBed.inject(Covid19ApiService) as jasmine.SpyObj<
-      Covid19ApiService
-    >;
+
+    // Whenever we inject 'COVID_DATA_API_SUB_SERVICE' tokens,
+    // we expect multiple services to be injected
+    dependancyServiceSpies = TestBed.inject<CovidDataApiSubService[]>(
+      COVID_DATA_API_SUB_SERVICE
+    ) as jasmine.SpyObj<CovidDataApiSubService>[];
   });
 
   it('should be created', () => {
@@ -49,7 +64,7 @@ describe('CovidDataApiService', () => {
 
   it('should call getLatestGlobalData and return stubbed data', () => {
     // set up return value
-    dependancyServiceSpy.getLatestGlobalData.and.returnValue(
+    dependancyServiceSpies[0].getLatestGlobalData.and.returnValue(
       of((latestGlobalDataResponse as unknown) as CovidDataPoint)
     );
 
@@ -60,7 +75,7 @@ describe('CovidDataApiService', () => {
       );
     });
 
-    expect(dependancyServiceSpy.getLatestGlobalData.calls.count()).toBe(
+    expect(dependancyServiceSpies[0].getLatestGlobalData.calls.count()).toBe(
       1,
       'Dependency method was only called once'
     );
@@ -68,7 +83,7 @@ describe('CovidDataApiService', () => {
 
   it('should call getLatestCountryData and return stubbed data', () => {
     // set up return value. This also specifies the argument that can be used
-    dependancyServiceSpy.getLatestCountryData
+    dependancyServiceSpies[0].getLatestCountryData
       .withArgs(stubCountry)
       .and.returnValue(
         of((latestCountryDataResponse as unknown) as CovidDataPoint)
@@ -81,9 +96,34 @@ describe('CovidDataApiService', () => {
       );
     });
 
-    expect(dependancyServiceSpy.getLatestCountryData.calls.count()).toBe(
+    expect(dependancyServiceSpies[0].getLatestCountryData.calls.count()).toBe(
       1,
       'Dependency method was only called once'
     );
   });
+
+  it('Calls handleError() with the country error if country is not found in response', () => {
+    const handleErrorSpy = spyOn(service, 'handleError').and.callThrough();
+
+    dependancyServiceSpies[0].getLatestCountryData
+      .withArgs(stubCountry)
+      .and.callFake(
+        // Sets the behaviour of what happens when calling getLatestCountryData
+        (country) =>
+          of(EMPTY).pipe(
+            map(() => {
+              throw missingCountryError(country);
+            })
+          )
+      );
+
+    service.getLatestCountryData(stubCountry).subscribe();
+
+    expect(service.handleError).toHaveBeenCalledTimes(1);
+    expect(handleErrorSpy.calls.mostRecent().args[0].message).toBe(
+      missingCountryError(stubCountry).message
+    );
+  });
+
+  // TODO: add tests for when services fail
 });

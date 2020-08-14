@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Covid19ApiService, missingCountryError, SummaryResponse } from './covid-19-api.service';
+import { Covid19ApiService, SummaryResponse } from './covid-19-api.service';
 import {
   HttpClientTestingModule,
   HttpTestingController,
@@ -175,17 +175,6 @@ describe('Covid19ApiService', () => {
       // Ensure there are no outstanding requests
       httpTestingController.verify();
     });
-
-    it('Calls handleError() with the country error if country is not found in response', () => {
-      const handleErrorSpy = spyOn(apiService, 'handleError').and.callThrough();
-      apiService.getLatestCountryData(unknownCountry).subscribe();
-
-      const req = httpTestingController.expectOne(`${apiService.baseUrl}summary`);
-      req.flush(sampleSummaryResponse);
-
-      expect(apiService.handleError).toHaveBeenCalledTimes(1);
-      expect(handleErrorSpy.calls.mostRecent().args[0].message).toBe(missingCountryError(unknownCountry).message);
-    })
 
     // TODO: test for handling http errors
   });
