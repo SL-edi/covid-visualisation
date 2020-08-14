@@ -3,9 +3,11 @@ import { CovidDataApiSubService } from '../covid-data-api.service';
 import { HttpClient } from '@angular/common/http';
 import { Country } from 'iso-3166-1/dist/iso-3166';
 import { CovidDataPoint } from '../../models/CovidDataPoint';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, EMPTY } from 'rxjs';
+import { map, tap, catchError } from 'rxjs/operators';
 import { SummaryResponse } from '../../models/externalApis/covid19Api';
+
+export const missingCountryError = (country: Country) => new Error(`No matching country code found in response for code: ${country.alpha2}, country ${country.country}`);
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +28,10 @@ export class Covid19ApiService implements CovidDataApiSubService {
             summary.Global.TotalDeaths,
             summary.Global.TotalRecovered
           )
+        }),
+        catchError(err => {
+          this.handleError(err);
+          return EMPTY;
         })
       )
   }
@@ -35,6 +41,9 @@ export class Covid19ApiService implements CovidDataApiSubService {
       .pipe(
         map<SummaryResponse, CovidDataPoint>(summary => {
           const countryData = summary.Countries.find(cData => cData.CountryCode === country.alpha2)
+
+          if (countryData === undefined) throw missingCountryError(country);
+          
           return new CovidDataPoint(
             country.alpha2,
             new Date(summary.Date),
@@ -42,7 +51,16 @@ export class Covid19ApiService implements CovidDataApiSubService {
             countryData.TotalDeaths,
             countryData.TotalRecovered
           )
+        }),
+        catchError(err => {
+          this.handleError(err);
+          return EMPTY;
         })
       )
+  }
+
+  handleError(err: Error): void {
+    // TODO: replace with something better when we have a error handler/logger implemented
+    console.log(err);
   }
 }

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Covid19ApiService } from './covid-19-api.service';
+import { Covid19ApiService, missingCountryError } from './covid-19-api.service';
 import {
   HttpClientTestingModule,
   HttpTestingController,
@@ -8,6 +8,7 @@ import {
 import { SummaryResponse } from 'src/app/models/externalApis/covid19Api';
 
 import isoLookup from 'iso-3166-1';
+import { Country } from 'iso-3166-1/dist/iso-3166';
 
 describe('Covid19ApiService', () => {
   let apiService: Covid19ApiService;
@@ -63,6 +64,13 @@ describe('Covid19ApiService', () => {
     Date: '2020-04-05T06:37:00Z',
   };
 
+  const unknownCountry: Country = {
+    country: "Atlantis",
+    alpha2: "Unmatchable",
+    alpha3: "Unmatchable",
+    numeric: "Unmatchable"
+  }
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -116,6 +124,8 @@ describe('Covid19ApiService', () => {
       // Ensure there are no outstanding requests
       httpTestingController.verify();
     });
+
+    // TODO: test for handling http errors
   });
 
   describe('getLatestCountryData(...)', () => {
@@ -162,5 +172,18 @@ describe('Covid19ApiService', () => {
       // Ensure there are no outstanding requests
       httpTestingController.verify();
     });
+
+    it('Calls handleError() with the country error if country is not found in response', () => {
+      const handleErrorSpy = spyOn(apiService, 'handleError').and.callThrough();
+      apiService.getLatestCountryData(unknownCountry).subscribe();
+
+      const req = httpTestingController.expectOne(`${apiService.baseUrl}summary`);
+      req.flush(sampleSummaryResponse);
+
+      expect(apiService.handleError).toHaveBeenCalledTimes(1);
+      expect(handleErrorSpy.calls.mostRecent().args[0].message).toBe(missingCountryError(unknownCountry).message);
+    })
+
+    // TODO: test for handling http errors
   });
 });
