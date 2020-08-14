@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Covid19ApiService, missingCountryError } from './covid-19-api.service';
+import { Covid19ApiService, missingCountryError, SummaryResponse } from './covid-19-api.service';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import { SummaryResponse } from 'src/app/models/externalApis/covid19Api';
+
 
 import isoLookup from 'iso-3166-1';
 import { Country } from 'iso-3166-1/dist/iso-3166';
