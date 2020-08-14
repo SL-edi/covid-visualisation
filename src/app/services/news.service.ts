@@ -10,6 +10,8 @@ export interface NewsService {
   getNewsObservable(): Subject<News[]>;
 }
 
+interface SmartableAiResponse { title: string; excerpt: string; webUrl: string; }
+
 @Injectable({
   providedIn: 'root'
 })
@@ -39,16 +41,20 @@ export class SmartableAiNewsService implements NewsService {
         {
           headers: { 'Subscription-Key': this.subscriptionKey }
         })
-      .pipe(map((response: { news: any }) =>
+      .pipe(map((response: { news: SmartableAiResponse[] }) =>
         response.news.map(
-          ({ title, excerpt, webUrl }: { title: string, excerpt: string, webUrl: string }) => ({
+          ({ title, excerpt, webUrl }: SmartableAiResponse) => ({
             title,
             url: webUrl,
             description: excerpt
           }))
       ))
       .subscribe(
-        news => { this.newsObserver.next(news); }
+        news => { this.newsObserver.next(news); },
+        error => {
+          this.newsObserver.next([]); // No news displayed if request fails
+          console.error(error);
+        }
       );
   }
 }
