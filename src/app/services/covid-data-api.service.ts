@@ -2,7 +2,7 @@ import { Injectable, Inject, InjectionToken } from '@angular/core';
 import { CovidDataPoint } from '../models/CovidDataPoint';
 import { Country } from '../models/Country';
 
-import { Observable, race, NEVER, throwError } from 'rxjs';
+import { Observable, race, NEVER, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 export interface CovidDataApiSubService {
@@ -31,18 +31,19 @@ export class CovidDataApiService {
    *
    * @param {Observable<CovidDataPoint>} method The method to be called
    */
-  private getResultFromOneApiFor(country?: Country): Observable<CovidDataPoint> {
-    // TODO fix race condition, possibly using reduce?
-      let errorCount = 0; // keep track of number or errored out requests for later
+  private getResultFromOneApiFor(
+    country?: Country
+  ): Observable<CovidDataPoint> {
+    let errorCount = 0; // keep track of number or errored out requests for later
+
     return race( // only need result from one of the apis
-      this.apiServices.map<Observable<CovidDataPoint>>((api, i, arr) => 
-        // call the wanted method from each api
-        new GetLatestDataCommand(api, country).call().pipe( 
+      this.apiServices.map<Observable<CovidDataPoint>>((api, i, apis) =>
+        new GetLatestDataCommand(api, country).call().pipe(
           catchError((err) => {
             errorCount += 1;
             this.handleError(err);
-            return (errorCount === arr.length) 
-            ? throwError(noGoodApiResponseError()) 
+            return (errorCount === apis.length)
+            ? throwError(noGoodApiResponseError())
             // If all other subservices errored out, return an error observable to end the race
             : NEVER; // Use NEVER so that an erroring out request doesn't end the race
           })
@@ -70,10 +71,10 @@ interface ApiFetchCommand {
 }
 
 class GetLatestDataCommand implements ApiFetchCommand {
-  constructor(private api: CovidDataApiSubService, private country?: Country) { }
+  constructor(private api: CovidDataApiSubService, private country?: Country) {}
 
   call(): Observable<CovidDataPoint> {
-    return (this.country)
+    return this.country
       ? this.api.getLatestCountryData(this.country)
       : this.api.getLatestGlobalData();
   }
@@ -84,7 +85,5 @@ export const missingCountryError = (country: Country) =>
     `No matching country code found in response for code: ${country.iso2}, country ${country.name}`
   );
 
-export const noGoodApiResponseError = () => 
-    new Error(
-      `All Api sub-services responded with errors`
-    )
+export const noGoodApiResponseError = () =>
+  new Error(`All Api sub-services responded with errors`);
