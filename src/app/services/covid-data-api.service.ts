@@ -30,6 +30,12 @@ export class CovidDataApiService implements CovidDataApiServiceInterface {
   /**
    * Cycles through each api service, calling the method provided, till one returns a value
    * If all lead to errors, returns an empty observable
+   * 
+   * e.g. to call the 'foo' method of each subservice with args 1, 2, 3 call as
+   * `this.getResultFromOneApiFor(this.foo, 1, 2, 3)`
+   * 
+   * Only works if this method and each subservice implement the same interface/functions
+   * 
    * @param {Observable<T>} method The method to be called
    */
   private getResultFromOneApiFor<T>(
