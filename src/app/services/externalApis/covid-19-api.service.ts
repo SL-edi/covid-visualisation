@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
   CovidDataApiSubService,
-  Country,
   missingCountryError,
 } from '../covid-data-api.service';
 import { HttpClient } from '@angular/common/http';
 import { CovidDataPoint } from '../../models/CovidDataPoint';
+import { Country } from '../../models/Country';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

@@ -1,15 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-
 import {
   CovidDataApiService,
-  Country,
   COVID_DATA_API_SUB_SERVICE,
   CovidDataApiSubService,
   missingCountryError,
 } from './covid-data-api.service';
 import { of, EMPTY } from 'rxjs';
-
 import { CovidDataPoint } from '../models/CovidDataPoint';
+import { Country } from '../models/Country';
 import { map } from 'rxjs/operators';
 
 describe('CovidDataApiService', () => {
@@ -126,4 +124,5 @@ describe('CovidDataApiService', () => {
   });
 
   // TODO: add tests for when services fail
+  it('Attempts the 2nd api subservice if first one fails', () => {});
 });

@@ -5,7 +5,7 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import { Country } from '../covid-data-api.service';
+import { Country } from '../../models/Country';
 import { byCountryCode } from 'country-finder';
 
 
