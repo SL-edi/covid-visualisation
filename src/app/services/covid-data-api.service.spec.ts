@@ -170,7 +170,7 @@ describe('CovidDataApiService', () => {
       () => {},
       (err) => {
         expect(err.message).toBe(
-          noGoodApiResponseError(service.getLatestGlobalData.name).message,
+          noGoodApiResponseError().message,
           'The service receives an error if all sub services error out'
         );
         done();
