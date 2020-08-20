@@ -4,11 +4,12 @@ import {
   COVID_DATA_API_SUB_SERVICE,
   CovidDataApiSubService,
   missingCountryError,
+  noGoodApiResponseError,
 } from './covid-data-api.service';
-import { of, EMPTY } from 'rxjs';
+import { of, EMPTY, Observable, throwError, NEVER } from 'rxjs';
 import { CovidDataPoint } from '../models/CovidDataPoint';
 import { Country } from '../models/Country';
-import { map } from 'rxjs/operators';
+import { map, delay } from 'rxjs/operators';
 
 describe('CovidDataApiService', () => {
   let service: CovidDataApiService;
@@ -54,13 +55,18 @@ describe('CovidDataApiService', () => {
     dependancyServiceSpies = TestBed.inject<CovidDataApiSubService[]>(
       COVID_DATA_API_SUB_SERVICE
     ) as jasmine.SpyObj<CovidDataApiSubService>[];
+
+    dependancyServiceSpies.forEach((spy) => {
+      spy.getLatestGlobalData.and.returnValue(NEVER);
+      spy.getLatestCountryData.and.returnValue(NEVER);
+    });
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should call getLatestGlobalData and return stubbed data', () => {
+  it('should call getLatestGlobalData and return stubbed data', (done) => {
     // set up return value
     dependancyServiceSpies[0].getLatestGlobalData.and.returnValue(
       of((latestGlobalDataResponse as unknown) as CovidDataPoint)
@@ -71,6 +77,7 @@ describe('CovidDataApiService', () => {
         latestGlobalDataResponse,
         `Returned the stub response. Expected ${latestGlobalDataResponse}, returned ${data}`
       );
+      done();
     });
 
     expect(dependancyServiceSpies[0].getLatestGlobalData.calls.count()).toBe(
@@ -79,7 +86,7 @@ describe('CovidDataApiService', () => {
     );
   });
 
-  it('should call getLatestCountryData and return stubbed data', () => {
+  it('should call getLatestCountryData and return stubbed data', (done) => {
     // set up return value. This also specifies the argument that can be used
     dependancyServiceSpies[0].getLatestCountryData
       .withArgs(stubCountry)
@@ -92,6 +99,7 @@ describe('CovidDataApiService', () => {
         latestCountryDataResponse,
         `Returned the stub response. Expected ${latestCountryDataResponse}, returned ${data}`
       );
+      done();
     });
 
     expect(dependancyServiceSpies[0].getLatestCountryData.calls.count()).toBe(
@@ -107,12 +115,7 @@ describe('CovidDataApiService', () => {
       .withArgs(stubCountry)
       .and.callFake(
         // Sets the behaviour of what happens when calling getLatestCountryData
-        (country) =>
-          of(EMPTY).pipe(
-            map(() => {
-              throw missingCountryError(country);
-            })
-          )
+        (country) => throwError(missingCountryError(country))
       );
 
     service.getLatestCountryData(stubCountry).subscribe();
@@ -123,6 +126,65 @@ describe('CovidDataApiService', () => {
     );
   });
 
-  // TODO: add tests for when services fail
-  it('Attempts the 2nd api subservice if first one fails', () => {});
+  it('Gets result from another api subservice if 1st one fails', (done: DoneFn) => {
+    dependancyServiceSpies[0].getLatestCountryData
+      .withArgs(stubCountry)
+      .and.returnValue(throwError(new Error('Skipping this')));
+
+    dependancyServiceSpies[1].getLatestCountryData
+      .withArgs(stubCountry)
+      .and.returnValue(
+        (of(latestCountryDataResponse).pipe(
+          delay(100)
+        ) as unknown) as Observable<CovidDataPoint>
+        // add delay to simulate a good response coming after the first error
+      );
+
+    service.getLatestCountryData(stubCountry).subscribe((data) => {
+      expect((data as unknown) as string).toBe(
+        latestCountryDataResponse,
+        `Returned the stub response. Expected ${latestCountryDataResponse}, returned ${data}`
+      );
+      done();
+    });
+
+    expect(dependancyServiceSpies[0].getLatestCountryData.calls.count()).toBe(
+      1,
+      'Dependency method was only called once'
+    );
+
+    expect(dependancyServiceSpies[1].getLatestCountryData.calls.count()).toBe(
+      1,
+      'Dependency method was only called once'
+    );
+  });
+
+  it('Service errors out if all sub service responses are errors', (done) => {
+    dependancyServiceSpies.forEach((spy) =>
+      spy.getLatestGlobalData.and.returnValue(
+        throwError(new Error('stub error'))
+      )
+    );
+
+    service.getLatestGlobalData().subscribe(
+      () => {},
+      (err) => {
+        expect(err.message).toBe(
+          noGoodApiResponseError(service.getLatestGlobalData.name).message,
+          'The service receives an error if all sub services error out'
+        );
+        done();
+      }
+    );
+
+    expect(dependancyServiceSpies[0].getLatestGlobalData.calls.count()).toBe(
+      1,
+      'Dependency method was only called once'
+    );
+
+    expect(dependancyServiceSpies[1].getLatestGlobalData.calls.count()).toBe(
+      1,
+      'Dependency method was only called once'
+    );
+  });
 });
