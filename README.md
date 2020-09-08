@@ -1,6 +1,14 @@
-# CovidVisualisation
+# Covid Visualisation
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.3.
+
+## Apis
+
+The list of apis used can be found in
+https://covid-19-apis.postman.com/
+We currently use:
+-  covid19api.com
+- api.smartable.ai/coronavirus/news/
 
 ## Development server
 
