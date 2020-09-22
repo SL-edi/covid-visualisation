@@ -18,8 +18,11 @@ interface SmartableAiResponse { title: string; excerpt: string; webUrl: string; 
   providedIn: 'root'
 })
 export class SmartableAiNewsService implements NewsService {
-  private url = 'https://api.smartable.ai/coronavirus/news/';
-  private subscriptionKey = '955eacf9525e45dd8d46a07b7daa649e';
+  private url = 'https://coronavirus-smartable.p.rapidapi.com/news/v1/';
+  private headers = {
+    'x-rapidapi-host': 'coronavirus-smartable.p.rapidapi.com',
+    'x-rapidapi-key': '5421911338msh0ea2e1d4250ed68p1890cajsncc797e1a6208',
+  };
   private newsObserver: Subject<News[]>;
 
   constructor(private httpClient: HttpClient, private regionService: RegionSelectService) {
@@ -39,9 +42,9 @@ export class SmartableAiNewsService implements NewsService {
   private getSubscription(region: Region): void {
     this.httpClient
       .get(
-        this.url + region.code,
+        this.url + region.code + '/',
         {
-          headers: { 'Subscription-Key': this.subscriptionKey }
+          headers: this.headers
         })
       .pipe(map((response: { news: SmartableAiResponse[] }) =>
         response.news.map(
