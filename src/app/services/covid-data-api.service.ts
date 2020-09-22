@@ -32,13 +32,13 @@ export class CovidDataApiService {
    * @param {Observable<CovidDataPoint>} method The method to be called
    */
   private getResultFromOneApiFor(
-    country?: Country
+    fetchCommand: ApiFetchCommand
   ): Observable<CovidDataPoint> {
     let errorCount = 0; // keep track of number or errored out requests for later
 
     return race( // only need result from one of the apis
       this.apiServices.map<Observable<CovidDataPoint>>((api, i, apis) =>
-        new GetLatestDataCommand(api, country).call().pipe(
+        fetchCommand.call(api).pipe(
           catchError((err) => {
             errorCount += 1;
             this.handleError(err);
@@ -53,11 +53,13 @@ export class CovidDataApiService {
   }
 
   getLatestGlobalData(): Observable<CovidDataPoint> {
-    return this.getResultFromOneApiFor();
+    const fetchCommand = new GetLatestDataCommand()
+    return this.getResultFromOneApiFor(fetchCommand);
   }
 
   getLatestCountryData(country: Country): Observable<CovidDataPoint> {
-    return this.getResultFromOneApiFor(country);
+    const fetchCommand = new GetLatestDataCommand(country)
+    return this.getResultFromOneApiFor(fetchCommand);
   }
 
   handleError(err: Error): void {
@@ -67,16 +69,16 @@ export class CovidDataApiService {
 }
 
 interface ApiFetchCommand {
-  call(): Observable<CovidDataPoint>;
+  call(api: CovidDataApiSubService): Observable<CovidDataPoint>;
 }
 
 class GetLatestDataCommand implements ApiFetchCommand {
-  constructor(private api: CovidDataApiSubService, private country?: Country) {}
+  constructor(private country?: Country) {}
 
-  call(): Observable<CovidDataPoint> {
+  call(api: CovidDataApiSubService): Observable<CovidDataPoint> {
     return this.country
-      ? this.api.getLatestCountryData(this.country)
-      : this.api.getLatestGlobalData();
+      ? api.getLatestCountryData(this.country)
+      : api.getLatestGlobalData();
   }
 }
 
