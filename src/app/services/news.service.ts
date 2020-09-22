@@ -19,10 +19,8 @@ interface SmartableAiResponse { title: string; excerpt: string; webUrl: string; 
 })
 export class SmartableAiNewsService implements NewsService {
   private url = 'https://coronavirus-smartable.p.rapidapi.com/news/v1/';
-  private headers = {
-    'x-rapidapi-host': 'coronavirus-smartable.p.rapidapi.com',
-    'x-rapidapi-key': '5421911338msh0ea2e1d4250ed68p1890cajsncc797e1a6208',
-  };
+  // Removed until we decide what to do with smartable api subscription
+  private headers = {};
   private newsObserver: Subject<News[]>;
 
   constructor(private httpClient: HttpClient, private regionService: RegionSelectService) {
