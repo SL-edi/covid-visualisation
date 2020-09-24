@@ -1,0 +1,15 @@
+.app {
+    display: grid;
+    grid-template: "table" 1fr
+        "map" 1fr/ 1fr;
+    height: 100%;
+}
+
+.map {
+    grid-area: map;
+    min-height: 300px;
+}
+
+.table {
+    grid-area: table;
+}

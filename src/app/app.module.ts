@@ -3,8 +3,9 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { AgGridModule } from 'ag-grid-angular';
-import { CountriesTableComponent } from './countries-table/countries-table.component';
 import { HttpClientModule } from '@angular/common/http';
+
+import { CountriesTableComponent } from './components/countries-table/countries-table.component';
 import { WorldMapComponent } from './components/world-map/world-map.component';
 
 import { OpenStreetMapProvider } from './services/map-provider.service';
