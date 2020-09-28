@@ -1,8 +1,9 @@
 .main-screen {
     display: grid;
     grid-template: 
-        "selector table" auto
-        "map news" 1fr /1fr 1fr;
+        "table selector" 1fr
+        "table map" 5fr
+        "table news" 5fr /1fr 1fr;
 }
 
 .region-select {
@@ -15,6 +16,7 @@
 
 .world-map {
     grid-area: map;
+    height: 100%;
 }
 
 .table {
