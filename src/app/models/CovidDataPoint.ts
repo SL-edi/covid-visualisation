@@ -1,4 +1,4 @@
-import { byCountryCode, byName } from 'country-finder';  
+import { byCountryCode, byName } from 'country-finder';
 
 /** Holds total case data for a location *(in alpha2 format)* on a date *(in UTC string format)* */
 export class CovidDataPoint {
@@ -7,12 +7,15 @@ export class CovidDataPoint {
 
   /**
    * Holds Covid case data for a location for a date
-   * 
-   * @param {string}  location    The location (not case sensitive) corresponding to the data ideally in alpha2/alpha3 format or "global". Using the country name is also possible but is not as reliable due to spelling differences.
-   * @param {Date}    date        The date corresponding to the data as UTC string format
-   * @param {number}  confirmed   The total confirmed cases up to the date
-   * @param {number}  dead        The total dead cases up to the date
-   * @param {number}  recovered   The total recovered cases up to the date
+   *
+   * @param location    The location (not case sensitive) corresponding to
+   *  the data ideally in alpha2/alpha3 format or "global".
+   *  Using the country name is also possible but is not as reliable
+   *  due to spelling differences.
+   * @param date        The date corresponding to the data as UTC string format
+   * @param confirmed   The total confirmed cases up to the date
+   * @param dead        The total dead cases up to the date
+   * @param recovered   The total recovered cases up to the date
    */
   constructor(
     location: string,
@@ -23,8 +26,8 @@ export class CovidDataPoint {
   ) {
     if (location.length === 2 ) {
       this.location = byCountryCode(location).iso2;
-    } else if (location.toLowerCase() === "global") {
-      this.location = "Global"
+    } else if (location.toLowerCase() === 'global') {
+      this.location = 'Global';
     } else if (location.length === 3) {
       this.location = byCountryCode(location).iso2;
     } else {

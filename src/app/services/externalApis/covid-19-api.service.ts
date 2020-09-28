@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
   CovidDataApiSubService,
-  missingCountryError,
 } from '../covid-data-api.service';
 import { HttpClient } from '@angular/common/http';
 import { CovidDataPoint } from '../../models/CovidDataPoint';
-import { Country } from '../../models/Country';
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -17,37 +14,25 @@ export class Covid19ApiService implements CovidDataApiSubService {
 
   constructor(private http: HttpClient) {}
 
-  getLatestGlobalData(): Observable<CovidDataPoint> {
-    return this.http.get<SummaryResponse>(`${this.baseUrl}summary`).pipe(
-      map<SummaryResponse, CovidDataPoint>((summary) => {
-        return new CovidDataPoint(
-          'Global',
-          new Date(summary.Date),
-          summary.Global.TotalConfirmed,
-          summary.Global.TotalDeaths,
-          summary.Global.TotalRecovered
-        );
-      })
-    );
-  }
-
-  getLatestCountryData(country: Country): Observable<CovidDataPoint> {
-    return this.http.get<SummaryResponse>(`${this.baseUrl}summary`).pipe(
-      map<SummaryResponse, CovidDataPoint>((summary) => {
-        const countryData = summary.Countries.find(
-          (cData) => cData.CountryCode === country.iso2
-        );
-
-        if (countryData === undefined) throw missingCountryError(country);
-
-        return new CovidDataPoint(
-          country.iso2,
-          new Date(summary.Date),
-          countryData.TotalConfirmed,
-          countryData.TotalDeaths,
-          countryData.TotalRecovered
-        );
-      })
+  call(
+    successCallback: (message: any) => void,
+    errorCallback: (error?: any) => void
+  ): void {
+    this.http.get<SummaryResponse>(`${this.baseUrl}summary`).pipe(
+      map((response: { Countries: CountryDataPoint[] }) =>
+        response.Countries.map(countryData =>
+          new CovidDataPoint(
+            countryData.CountryCode,
+            new Date(),
+            countryData.TotalConfirmed,
+            countryData.TotalDeaths,
+            countryData.TotalRecovered
+          )
+        )
+      )
+    ).subscribe(
+      successCallback,
+      errorCallback
     );
   }
 }
