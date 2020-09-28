@@ -15,10 +15,12 @@ export class CountriesTableComponent implements OnInit {
 
   defaultColDef = {
     sortable: true,
+    width: 120
   };
 
   columnDefs = [
-    {headerName: 'Name', field: 'country'},
+    {valueGetter: 'node.rowIndex + 1', width: 75},
+    {headerName: 'Name', field: 'country', filter: true},
     {headerName: 'Total Cases', field: 'confirmed', sort: 'desc'},
     {headerName: 'Total Deaths', field: 'dead'},
     {headerName: 'Total Recovered', field: 'recovered'},
