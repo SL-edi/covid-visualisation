@@ -6,7 +6,6 @@ import { byCountryCode } from 'country-finder';
 
 import { MapLocation } from '../../models/MapLocation';
 import { CovidDataPoint } from 'src/app/models/CovidDataPoint';
-import { Color } from 'ag-grid-community';
 
 const INFECTED_COLOUR = 'red';
 const DEAD_COLOUR = 'black';
