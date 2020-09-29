@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Covid19ApiService, SummaryResponse } from './covid-19-api.service';
+import { SummaryCovid19ApiService, SummaryResponse } from './summary-covid-19-api.service';
 import {
   HttpClientTestingModule,
   HttpTestingController,
@@ -11,7 +11,7 @@ import { byCountryCode } from 'country-finder';
 
 
 describe('Covid19ApiService', () => {
-  let apiService: Covid19ApiService;
+  let apiService: SummaryCovid19ApiService;
   let httpTestingController: HttpTestingController;
 
   const sampleSummaryResponse: SummaryResponse = {
@@ -79,7 +79,7 @@ describe('Covid19ApiService', () => {
       imports: [HttpClientTestingModule],
     });
 
-    apiService = TestBed.inject(Covid19ApiService);
+    apiService = TestBed.inject(SummaryCovid19ApiService);
     httpTestingController = TestBed.inject(HttpTestingController);
   });
 

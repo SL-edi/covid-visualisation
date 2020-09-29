@@ -4,13 +4,14 @@ import {
 } from '../covid-data-api.service';
 import { HttpClient } from '@angular/common/http';
 import { CovidDataPoint } from '../../models/CovidDataPoint';
+import { GlobalSummaryDataPoint, CountrySummaryDataPoint, BASE_URL } from './common-covid-19-api';
 import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
-export class Covid19ApiService implements CovidDataApiSubService {
-  readonly baseUrl = 'https://api.covid19api.com/';
+export class SummaryCovid19ApiService implements CovidDataApiSubService {
+  readonly baseUrl = BASE_URL;
 
   constructor(private http: HttpClient) {}
 
@@ -19,7 +20,7 @@ export class Covid19ApiService implements CovidDataApiSubService {
     errorCallback: (error?: any) => void
   ): void {
     this.http.get<SummaryResponse>(`${this.baseUrl}summary`).pipe(
-      map((response: { Countries: CountryDataPoint[] }) =>
+      map((response: { Countries: CountrySummaryDataPoint[] }) =>
         response.Countries.map(countryData =>
           new CovidDataPoint(
             countryData.CountryCode,
@@ -37,24 +38,8 @@ export class Covid19ApiService implements CovidDataApiSubService {
   }
 }
 
-interface GlobalDataPoint {
-  NewConfirmed: number;
-  TotalConfirmed: number;
-  NewDeaths: number;
-  TotalDeaths: number;
-  NewRecovered: number;
-  TotalRecovered: number;
-}
-
-interface CountryDataPoint extends GlobalDataPoint {
-  Country: string;
-  CountryCode: string;
-  Slug: string;
-  Date: string;
-}
-
 export interface SummaryResponse {
-  Global: GlobalDataPoint;
-  Countries: CountryDataPoint[];
+  Global: GlobalSummaryDataPoint;
+  Countries: CountrySummaryDataPoint[];
   Date: string;
 }
