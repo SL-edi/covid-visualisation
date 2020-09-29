@@ -1,0 +1,9 @@
+<h1>News</h1>
+<ul>
+  <li *ngFor="let newsItem of news">
+    <div class="header">
+      <a href={{newsItem.url}} target="_blank">{{newsItem.title}}</a>
+    </div>
+    <p>{{newsItem.description}}</p>
+  </li>
+</ul>
