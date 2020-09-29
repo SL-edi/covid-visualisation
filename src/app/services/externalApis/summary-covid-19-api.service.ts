@@ -4,7 +4,7 @@ import {
 } from '../covid-data-api.service';
 import { HttpClient } from '@angular/common/http';
 import { CovidDataPoint } from '../../models/CovidDataPoint';
-import { GlobalDataPoint, CountryDataPoint, BASE_URL } from './common-covid-19-api';
+import { GlobalSummaryDataPoint, CountrySummaryDataPoint, BASE_URL } from './common-covid-19-api';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class SummaryCovid19ApiService implements CovidDataApiSubService {
     errorCallback: (error?: any) => void
   ): void {
     this.http.get<SummaryResponse>(`${this.baseUrl}summary`).pipe(
-      map((response: { Countries: CountryDataPoint[] }) =>
+      map((response: { Countries: CountrySummaryDataPoint[] }) =>
         response.Countries.map(countryData =>
           new CovidDataPoint(
             countryData.CountryCode,
@@ -39,7 +39,7 @@ export class SummaryCovid19ApiService implements CovidDataApiSubService {
 }
 
 export interface SummaryResponse {
-  Global: GlobalDataPoint;
-  Countries: CountryDataPoint[];
+  Global: GlobalSummaryDataPoint;
+  Countries: CountrySummaryDataPoint[];
   Date: string;
 }

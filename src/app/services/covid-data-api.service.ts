@@ -43,8 +43,4 @@ export class CovidDataApiService {
     );
     callFunction();
   }
-
-  private callFunction() {
-    
-  }
 }
