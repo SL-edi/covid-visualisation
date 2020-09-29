@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { CovidDataApiSubService } from '../covid-data-api.service';
 import { RegionSelectService } from '../region-select.service';
 import { DateSelectService } from '../date-select.service';
-import { CountryHistoricalDataPoint, BASE_URL, toSlug } from './common-covid-19-api';
+import { CountryHistoricalDataPoint, BASE_URL, date2ApiFormat } from './common-covid-19-api';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -18,18 +18,16 @@ export class HistoricalCovid19ApiService implements CovidDataApiSubService {
     successCallback: (x: any) => void, 
     errorCallback: (x?: any) => void
   ): void {
-    const country = this.regionService.getRegion().name;
+    const countryCode = this.regionService.getRegion().code;
     const { from, to } = this.dateService.getDateRange();
-    const url = `${this.baseUrl}country/${toSlug(country)}?from=${this.date2ApiFormat(from)}&to=${this.date2ApiFormat(to)}`
+    const url = `${this.baseUrl}country/${countryCode}?from=${date2ApiFormat(from)}&to=${date2ApiFormat(to)}`
 
-    this.http.get<CountryHistoricalDataPoint[]>(url)
-      .subscribe(
-        successCallback,
-        errorCallback
+    this.http.get<CountryHistoricalDataPoint[]>(url).pipe(
+      // This ensures we use country data, not province/state/city data
+      map((response) => response.filter(countryData => countryData.Province === "" && countryData.City === "")),
+    ).subscribe(
+      successCallback,
+      errorCallback
     )
-  }
-
-  private date2ApiFormat(date: Date) {
-    return `${date.toISOString().slice(0, -2)}Z`;
   }
 }

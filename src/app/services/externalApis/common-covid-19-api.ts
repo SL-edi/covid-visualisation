@@ -29,6 +29,6 @@ export interface CountryHistoricalDataPoint {
   Date: string;
 }
 
-export const toSlug = (countryName: string) => countryName.toLowerCase().replace(' ','-');
+export const date2ApiFormat = (date: Date) => `${date.toISOString().slice(0, -2)}Z`;
 
 export const BASE_URL = 'https://api.covid19api.com/';
