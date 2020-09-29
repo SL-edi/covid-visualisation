@@ -11,13 +11,14 @@ export class DateSelectService {
 
   constructor() {
     // TODO - Update once date selector component is created
-    const todaysDate = new Date(Date.now());
-    const twoDaysAgoDate = new Date(todaysDate);
-    twoDaysAgoDate.setUTCDate(todaysDate.getDate() - 2);
+    const yesterdaysDate = new Date(Date.now());
+    yesterdaysDate.setUTCDate(yesterdaysDate.getDate() - 1)
+    const twoDaysBeforeDate = new Date(yesterdaysDate);
+    twoDaysBeforeDate.setUTCDate(yesterdaysDate.getDate() - 3);
 
     this.dateRangeSelected = {
-      to: todaysDate,
-      from: twoDaysAgoDate
+      to: yesterdaysDate,
+      from: twoDaysBeforeDate
     }
     
     this.subscription = new Subject<DateRange>();

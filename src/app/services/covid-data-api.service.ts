@@ -3,6 +3,7 @@ import { CovidDataPoint } from '../models/CovidDataPoint';
 
 import { Subject } from 'rxjs';
 import { CountryHistoricalDataPoint } from './externalApis/common-covid-19-api';
+import { RegionSelectService } from './region-select.service';
 
 export interface CovidDataApiSubService {
   call(
@@ -36,9 +37,11 @@ export class CovidDataApiService {
     @Inject(COVID_DATA_API_SUB_SERVICE_SUMMARY)
     private summaryApiServices: CovidDataApiSubService[],
     @Inject(COVID_DATA_API_SUB_SERVICE_HISTORICAL)
-    private historicalApiServices: CovidDataApiSubService[]
+    private historicalApiServices: CovidDataApiSubService[],
+    private regionService: RegionSelectService
   ) {
     this.getCovidSummaryData();
+    regionService.getRegionObservable().subscribe(() => this.getCovidHistoricalData())
   }
 
   /**
@@ -49,7 +52,7 @@ export class CovidDataApiService {
     this.callApis(this.summaryApiServices, this.summaryDataObserver);
   }
 
-  getCovidHistoricalData(): void {
+  private getCovidHistoricalData(): void {
     this.callApis(this.historicalApiServices, this.historicalDataObserver);
   }
 
