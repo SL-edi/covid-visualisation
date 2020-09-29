@@ -1,15 +1,25 @@
-.app {
+.main-screen {
     display: grid;
-    grid-template: "table" 1fr
-        "map" 1fr/ 1fr;
-    height: 100%;
+    grid-template: 
+        "table selector" 1fr
+        "table map" 5fr
+        "table news" 5fr /1fr 1fr;
 }
 
-.map {
+.region-select {
+    grid-area: selector;
+}
+
+.news {
+    grid-area: news;
+}
+
+.world-map {
     grid-area: map;
-    min-height: 300px;
+    height: 100%;
 }
 
 .table {
     grid-area: table;
 }
+
