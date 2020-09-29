@@ -7,7 +7,11 @@ export interface CovidDataApiSubService {
   call(successCallback: (x: any) => void, errorCallback: (x?: any) => void): void;
 }
 
-export const COVID_DATA_API_SUB_SERVICE = new InjectionToken<
+export const COVID_DATA_API_SUB_SERVICE_SUMMARY = new InjectionToken<
+  CovidDataApiSubService
+>('CovidDataApiSubService');
+
+export const COVID_DATA_API_SUB_SERVICE_HISTORICAL = new InjectionToken<
   CovidDataApiSubService
 >('CovidDataApiSubService');
 
@@ -19,7 +23,7 @@ export class CovidDataApiService {
   constructor(
     // Inspired by (https://stackoverflow.com/a/35916788)
     // Each api service must have its own provider registered in app.module for the InjectionToken
-    @Inject(COVID_DATA_API_SUB_SERVICE)
+    @Inject(COVID_DATA_API_SUB_SERVICE_SUMMARY)
     private apiServices: CovidDataApiSubService[]
   ) {
     this.getCovidSummaryData();
@@ -38,5 +42,9 @@ export class CovidDataApiService {
       () => console.error('All api sub-services responded with errors')
     );
     callFunction();
+  }
+
+  private callFunction() {
+    
   }
 }

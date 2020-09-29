@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import {
   CovidDataApiService,
-  COVID_DATA_API_SUB_SERVICE,
+  COVID_DATA_API_SUB_SERVICE_SUMMARY,
   CovidDataApiSubService,
   missingCountryError,
   noGoodApiResponseError,
@@ -43,8 +43,8 @@ describe('CovidDataApiService', () => {
     // provide and inject spy/mock instead of dependency
     TestBed.configureTestingModule({
       providers: [
-        { provide: COVID_DATA_API_SUB_SERVICE, useValue: spy1, multi: true },
-        { provide: COVID_DATA_API_SUB_SERVICE, useValue: spy2, multi: true },
+        { provide: COVID_DATA_API_SUB_SERVICE_SUMMARY, useValue: spy1, multi: true },
+        { provide: COVID_DATA_API_SUB_SERVICE_SUMMARY, useValue: spy2, multi: true },
       ],
     });
 
@@ -53,7 +53,7 @@ describe('CovidDataApiService', () => {
     // Whenever we inject 'COVID_DATA_API_SUB_SERVICE' tokens,
     // we expect multiple services to be injected
     dependancyServiceSpies = TestBed.inject<CovidDataApiSubService[]>(
-      COVID_DATA_API_SUB_SERVICE
+      COVID_DATA_API_SUB_SERVICE_SUMMARY
     ) as jasmine.SpyObj<CovidDataApiSubService>[];
 
     dependancyServiceSpies.forEach((spy) => {
