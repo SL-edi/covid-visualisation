@@ -5,11 +5,8 @@ import { Subject } from 'rxjs';
 import { CountryHistoricalDataPoint } from './externalApis/common-covid-19-api';
 import { RegionSelectService } from './region-select.service';
 
-export interface CovidDataApiSubService {
-  call(
-    successCallback: (x: any) => void,
-    errorCallback: (x?: any) => void
-  ): void;
+export interface CovidDataApiSubService { 
+  call(successCallback: (x: any) => void, errorCallback: (x?: any) => void): void;
 }
 
 export const COVID_DATA_API_SUB_SERVICE_SUMMARY = new InjectionToken<
@@ -24,12 +21,9 @@ export const COVID_DATA_API_SUB_SERVICE_HISTORICAL = new InjectionToken<
   providedIn: 'root',
 })
 export class CovidDataApiService {
-  summaryDataObserver: Subject<CovidDataPoint[]> = new Subject<
-    CovidDataPoint[]
-  >();
-  historicalDataObserver: Subject<CountryHistoricalDataPoint[]> = new Subject<
-    CountryHistoricalDataPoint[]
-  >();
+  summaryDataObserver: Subject<CovidDataPoint[]> = new Subject<CovidDataPoint[]>();
+  historicalDataObserver: Subject<CountryHistoricalDataPoint[]> = 
+    new Subject<CountryHistoricalDataPoint[]>();
 
   constructor(
     // Inspired by (https://stackoverflow.com/a/35916788)
