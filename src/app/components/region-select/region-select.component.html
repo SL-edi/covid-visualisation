@@ -1,3 +1,8 @@
-<select [ngModel]="selectedRegion" (ngModelChange)="onChange($event)">
-  <option *ngFor="let region of regions" [ngValue]="region">{{region.name}}</option>
-</select>
+<mat-form-field>
+  <mat-label>Region</mat-label>
+  <mat-select>
+    <mat-option *ngFor="let region of regions" [value]="region">
+      {{ region.name }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
