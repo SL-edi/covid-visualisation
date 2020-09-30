@@ -13,15 +13,34 @@
   height: 100%;
 }
 
+$infected-colour: red;
+$dead-colour: black;
+$recovered-colour: green;
+
 ::ng-deep {
   .infected-circle {
-    stroke: red;
+    stroke: $infected-colour;
+    fill: $infected-colour;
   }
   .recovered-circle {
-    stroke: green;
+    stroke: $recovered-colour;
+    fill: $recovered-colour;
   }
 
   .dead-circle {
-    stroke: black;
+    stroke: $dead-colour;
+    fill: $dead-colour;
+  }
+
+  .tooltip-infected {
+    color: $infected-colour;
+  }
+
+  .tooltip-dead {
+    color: $dead-colour;
+  }
+
+  .tooltip-recovered {
+    color: $recovered-colour;
   }
 }

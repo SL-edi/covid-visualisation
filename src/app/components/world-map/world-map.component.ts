@@ -56,17 +56,30 @@ export class WorldMapComponent implements AfterViewInit {
 
   private addData(data: CovidDataPoint[]): void {
     data.forEach(({ location, confirmed, dead, recovered }: CovidDataPoint) => {
-      const { lat, long } = byCountryCode(location);
+      const { lat, long, name } = byCountryCode(location);
+
+      const infected = confirmed - dead - recovered;
 
       // Draws 3 circles for each data point - recovered, dead, infected
       // Each AREA is proportional to the number of cases
       const recoveredRadius = SCALE_FACTOR * Math.sqrt(recovered);
       const deadRadius = SCALE_FACTOR * Math.sqrt(dead);
-      const infectedRadius = SCALE_FACTOR * Math.sqrt(confirmed - dead - recovered);
+      const infectedRadius = SCALE_FACTOR * Math.sqrt(infected);
 
-      circle([lat, long], { radius: recoveredRadius, className: 'recovered-circle' }).addTo(this.map);
-      circle([lat, long], { radius: deadRadius, className: 'dead-circle' }).addTo(this.map);
-      circle([lat, long], { radius: infectedRadius, className: 'infected-circle' }).addTo(this.map);
+      const tooltipText = `<h3>${name}</h3>
+        <p class="tooltip-infected"> infected: ${infected}
+        <p class="tooltip-dead"> dead: ${dead}
+        <p class="tooltip-recovered"> recovered: ${recovered}`;
+
+      circle([lat, long], { radius: recoveredRadius, className: 'recovered-circle' })
+        .bindTooltip(tooltipText)
+        .addTo(this.map);
+      circle([lat, long], { radius: deadRadius, className: 'dead-circle' }).addTo(this.map)
+        .bindTooltip(tooltipText)
+        .addTo(this.map);
+      circle([lat, long], { radius: infectedRadius, className: 'infected-circle' }).addTo(this.map)
+        .bindTooltip(tooltipText)
+        .addTo(this.map);
     });
   }
 }
