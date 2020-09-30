@@ -11,7 +11,7 @@ import { NewsComponent } from './components/news/news.component';
 import { RegionSelectComponent } from './components/region-select/region-select.component';
 import { WorldMapComponent } from './components/world-map/world-map.component';
 
-import { OpenStreetMapProvider } from './services/map-provider.service';
+import { MAP_PROVIDER, OpenStreetMapProvider } from './services/map-provider.service';
 
 import { COVID_DATA_API_SUB_SERVICE_SUMMARY, COVID_DATA_API_SUB_SERVICE_HISTORICAL } from './services/covid-data-api.service';
 import { SummaryCovid19ApiService } from './services/externalApis/summary-covid-19-api.service';
@@ -25,7 +25,7 @@ import { NEWS_SERVICE, SmartableAiNewsService } from './services/news.service';
     FormsModule,
     HttpClientModule],
   providers: [
-    { provide: 'MapProvider', useClass: OpenStreetMapProvider },
+    { provide: MAP_PROVIDER, useClass: OpenStreetMapProvider },
     {
       provide: COVID_DATA_API_SUB_SERVICE_SUMMARY,
       useClass: SummaryCovid19ApiService,
