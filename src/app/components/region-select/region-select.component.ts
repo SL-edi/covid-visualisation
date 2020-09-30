@@ -15,6 +15,8 @@ export class RegionSelectComponent implements OnInit {
   constructor(private regionService: RegionSelectService) {
     this.regions = regionService.regions;
     this.selectedRegion = regionService.getRegion();
+
+    regionService.getRegionObservable().subscribe(region => this.selectedRegion = region);
   }
 
   selectionChange(event: MatSelectChange): void {
