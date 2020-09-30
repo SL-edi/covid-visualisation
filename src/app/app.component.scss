@@ -2,12 +2,17 @@
     display: grid;
     grid-template: 
         "table selector" 1fr
+        "table date-selector"
         "table map" 5fr
         "table news" 5fr /1fr 1fr;
 }
 
 .region-select {
     grid-area: selector;
+}
+
+.date-range-select {
+    grid-area: date-selector
 }
 
 .news {
