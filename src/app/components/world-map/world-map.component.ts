@@ -7,9 +7,6 @@ import { byCountryCode } from 'country-finder';
 import { MapLocation } from '../../models/MapLocation';
 import { CovidDataPoint } from 'src/app/models/CovidDataPoint';
 
-const INFECTED_COLOUR = 'red';
-const DEAD_COLOUR = 'black';
-const RECOVERED_COLOUR = 'green';
 const SCALE_FACTOR = 500; // Size of markers in m*(people)^(-1/2)
 
 @Component({
@@ -67,9 +64,9 @@ export class WorldMapComponent implements AfterViewInit {
       const deadRadius = SCALE_FACTOR * Math.sqrt(dead);
       const infectedRadius = SCALE_FACTOR * Math.sqrt(confirmed - dead - recovered);
 
-      circle([lat, long], { radius: recoveredRadius, color: RECOVERED_COLOUR }).addTo(this.map);
-      circle([lat, long], { radius: deadRadius, color: DEAD_COLOUR }).addTo(this.map);
-      circle([lat, long], { radius: infectedRadius, color: INFECTED_COLOUR }).addTo(this.map);
+      circle([lat, long], { radius: recoveredRadius, className: 'recovered-circle' }).addTo(this.map);
+      circle([lat, long], { radius: deadRadius, className: 'dead-circle' }).addTo(this.map);
+      circle([lat, long], { radius: infectedRadius, className: 'infected-circle' }).addTo(this.map);
     });
   }
 }

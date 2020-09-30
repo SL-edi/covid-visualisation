@@ -12,3 +12,16 @@
 #map {
   height: 100%;
 }
+
+::ng-deep {
+  .infected-circle {
+    stroke: red;
+  }
+  .recovered-circle {
+    stroke: green;
+  }
+
+  .dead-circle {
+    stroke: black;
+  }
+}
