@@ -25,12 +25,14 @@ export class SmartableAiNewsService implements NewsService {
 
   constructor(private httpClient: HttpClient, private regionService: RegionSelectService) {
     this.newsObserver = new Subject<News[]>();
-    this.getSubscription(regionService.getRegion());
-    regionService.getRegionObservable().subscribe(
-      region => {
-        this.getSubscription(region);
-      }
-    );
+    
+    // TODO - uncomment out these line once we decide what to do with smartable api sub
+    // this.getSubscription(regionService.getRegion());
+    // regionService.getRegionObservable().subscribe(
+    //   region => {
+    //     this.getSubscription(region);
+    //   }
+    // );
   }
 
   getNewsObservable(): Subject<News[]> {

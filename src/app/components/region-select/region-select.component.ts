@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { RegionSelectService } from '../../services/region-select.service';
 import { Region } from 'src/app/models/Region';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-region-select',
@@ -11,18 +11,16 @@ import { Region } from 'src/app/models/Region';
 export class RegionSelectComponent implements OnInit {
   regions: Region[];
   selectedRegion: Region;
-  regionControl = new FormControl();
 
   constructor(private regionService: RegionSelectService) {
     this.regions = regionService.regions;
-    this.selectedRegion = regionService.selectedRegion;
+    this.selectedRegion = regionService.getRegion();
   }
 
-  onChange(value: Region): void {
-    this.regionService.setRegion(value);
+  selectionChange(event: MatSelectChange): void {
+    this.regionService.setRegion(event.value);
   }
-
+  
   ngOnInit(): void {
   }
-
 }

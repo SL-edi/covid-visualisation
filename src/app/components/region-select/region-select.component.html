@@ -1,6 +1,6 @@
 <mat-form-field>
   <mat-label>Region</mat-label>
-  <mat-select>
+  <mat-select [(value)]="selectedRegion" (selectionChange)="selectionChange($event)">
     <mat-option *ngFor="let region of regions" [value]="region">
       {{ region.name }}
     </mat-option>
