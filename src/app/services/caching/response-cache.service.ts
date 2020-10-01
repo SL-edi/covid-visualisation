@@ -16,20 +16,15 @@ export class ResponseCacheService {
   get(key: string): HttpResponse<any> {
     const timedResponse = this.cache.get(key);
     if(!timedResponse) {
-      console.log("CACHE SERVICE: No cache for " + key);
-      console.log(this.cache);
       return null;
     }
     
     const expires = timedResponse.expires;
     if(expires && expires < this.nowInSeconds()) {
       this.cache.delete(key);
-      console.log("CACHE SERVICE: Expired cache for " + key);
-      console.log(this.cache);
       return null;
     }
 
-    console.log("CACHE SERVICE: Returning response for " + key);
     return timedResponse.response;
   }
 
@@ -44,8 +39,6 @@ export class ResponseCacheService {
       response
     }
     this.cache.set(key, value);
-    console.log("CACHING: " + key);
-    console.log(this.cache);
   }
 
   /**
