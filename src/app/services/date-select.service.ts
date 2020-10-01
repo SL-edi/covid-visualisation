@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,27 +12,25 @@ export class DateSelectService {
 
   constructor() {
     // TODO - Update once date selector component is created
-    const yesterdaysDate = new Date(Date.now());
-    yesterdaysDate.setUTCDate(yesterdaysDate.getDate() - 1)
-    const twoDaysBeforeDate = new Date(yesterdaysDate);
-    twoDaysBeforeDate.setUTCDate(yesterdaysDate.getDate() - 3);
+    const yesterdaysDate = moment().subtract(1, 'd');
+    const threeDaysBeforeTodayDate = moment().subtract(3, 'd');
 
     this.dateRangeSelected = {
       to: yesterdaysDate,
-      from: twoDaysBeforeDate
+      from: threeDaysBeforeTodayDate
     }
     
     this.subscription = new Subject<DateRange>();
   }
 
-  setDateRange(from: Date, to: Date): void {
+  setDateRange(from: moment.Moment, to: moment.Moment): void {
     if (this.validateDates(from, to)) {
       this.dateRangeSelected = { from, to };
       this.subscription.next(this.dateRangeSelected);
     }
   }
 
-  private validateDates(from: Date, to: Date) {
+  private validateDates(from: moment.Moment, to: moment.Moment) {
     // Checks that dates are not null or undefined,
     // and from < to
     return !!from && from < to;
@@ -47,6 +46,6 @@ export class DateSelectService {
 }
 
 export interface DateRange {
-  from: Date;
-  to: Date;
+  from: moment.Moment;
+  to: moment.Moment;
 }
