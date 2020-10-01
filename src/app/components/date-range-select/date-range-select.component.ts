@@ -41,7 +41,7 @@ export class DateRangeSelectComponent implements OnInit {
   }
 
   startDateChanged() {
-    if (this.validDatesAreSet() && !this.isOpen) { 
+    if (!this.isOpen) { 
       // need the isOpen tag or this would fire off a second event 
       // when the date picker closes on selecting the end date
       this.setNewRange();
@@ -49,28 +49,10 @@ export class DateRangeSelectComponent implements OnInit {
   }
 
   endDateChanged() {
-    if (this.validDatesAreSet()) {
-      this.setNewRange();
-    }
+    this.setNewRange();
   }
 
   setNewRange() {
     this.dateSelectService.setDateRange(this.startDateCtrl.value, this.endDateCtrl.value);
-  }
-
-  private validDatesAreSet() {
-    const startDate: Date = this.startDateCtrl.value;
-    const endDate: Date = this.endDateCtrl.value;
-
-    if (endDate == null || startDate == null) {
-      // The date picker outputs null for invalid dates, so this checks that also
-      return false;
-    }
-
-    if (startDate > endDate) {
-      return false;
-    }
-    
-    return true;
   }
 }

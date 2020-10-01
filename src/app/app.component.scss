@@ -2,7 +2,7 @@
     display: grid;
     grid-template: 
         "table selector" 1fr
-        "table date-selector"
+        "table date-selector" 1fr
         "table map" 5fr
         "table news" 5fr /1fr 1fr;
 }

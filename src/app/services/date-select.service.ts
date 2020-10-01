@@ -25,8 +25,16 @@ export class DateSelectService {
   }
 
   setDateRange(from: Date, to: Date): void {
-    this.dateRangeSelected = { from, to };
-    this.subscription.next(this.dateRangeSelected);
+    if (this.validateDates(from, to)) {
+      this.dateRangeSelected = { from, to };
+      this.subscription.next(this.dateRangeSelected);
+    }
+  }
+
+  private validateDates(from: Date, to: Date) {
+    // Checks that dates are not null or undefined,
+    // and from < to
+    return !!from && from < to;
   }
 
   getDateRangeObservable(): Subject<DateRange> {
