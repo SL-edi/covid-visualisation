@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -18,6 +18,8 @@ import { SummaryCovid19ApiService } from './services/externalApis/summary-covid-
 import { HistoricalCovid19ApiService } from './services/externalApis/historical-covid-19-api.service';
 import { NEWS_SERVICE, SmartableAiNewsService } from './services/news.service';
 
+import { CacheInterceptor } from './httpInterceptors/cache.interceptor';
+
 @NgModule({
   declarations: [AppComponent, CountriesTableComponent, NewsComponent, RegionSelectComponent, WorldMapComponent],
   imports: [BrowserModule,
@@ -25,6 +27,7 @@ import { NEWS_SERVICE, SmartableAiNewsService } from './services/news.service';
     FormsModule,
     HttpClientModule],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true },
     { provide: MAP_PROVIDER, useClass: OpenStreetMapProvider },
     {
       provide: COVID_DATA_API_SUB_SERVICE_SUMMARY,
