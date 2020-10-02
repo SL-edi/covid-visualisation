@@ -13,13 +13,15 @@ import { DateSelectService } from 'src/app/services/date-select.service';
 export class DateRangeSelectComponent implements OnInit {
   startDateCtrl = new FormControl(moment());
   endDateCtrl = new FormControl(moment());
-  minDate = moment().year(2020).dayOfYear(1);
-  maxDate = moment();
+  minDate: Moment;
+  maxDate: Moment;
   isOpen = false;
 
   constructor(private _adapter: DateAdapter<Moment>,private dateSelectService: DateSelectService) {
     this._adapter.setLocale(navigator.language)
     const { from, to } = dateSelectService.getDateRange();
+    this.minDate = dateSelectService.minDate;
+    this.maxDate = dateSelectService.maxDate;
     this.startDateCtrl.setValue(from);
     this.endDateCtrl.setValue(to);
 
@@ -42,7 +44,7 @@ export class DateRangeSelectComponent implements OnInit {
   }
 
   startDateChanged() {
-    if (!this.isOpen) { 
+    if (!this.isOpen && this.startDateCtrl.value != null) { 
       // need the isOpen tag or this would fire off a second event 
       // when the date picker closes on selecting the end date
       this.setNewRange();
@@ -50,7 +52,9 @@ export class DateRangeSelectComponent implements OnInit {
   }
 
   endDateChanged() {
-    this.setNewRange();
+    if (this.endDateCtrl.value != null) {
+      this.setNewRange();
+    }
   }
 
   setNewRange() {

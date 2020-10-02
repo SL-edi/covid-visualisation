@@ -10,6 +10,9 @@ export class DateSelectService {
 
   private dateRangeSelected: DateRange;
   private subscription: Subject<DateRange>;
+  readonly minDate = moment().year(2020).dayOfYear(1);
+  readonly maxDate = moment();
+  private prevRange: DateRange;
 
   constructor() {
     // TODO - Update once date selector component is created
@@ -20,22 +23,24 @@ export class DateSelectService {
       to: yesterdaysDate,
       from: threeDaysBeforeTodayDate
     }
+    this.prevRange = this.dateRangeSelected;
     
     this.subscription = new Subject<DateRange>();
   }
 
   setDateRange(from: Moment, to: Moment): void {
-    console.log(from, to)
     if (this.validateDates(from, to)) {
       this.dateRangeSelected = { from, to };
-      this.subscription.next(this.dateRangeSelected);
     } 
+    this.subscription.next(this.dateRangeSelected);
   }
 
   private validateDates(from: Moment, to: Moment) {
     // Checks that dates are not null or undefined,
     // and from < to
-    return !!from && from < to;
+    const output = !!from && from < to;
+    const withinMinMax = from.isAfter(this.minDate) && to.isBefore(this.maxDate);
+    return output && withinMinMax;
   }
 
   getDateRangeObservable(): Subject<DateRange> {
