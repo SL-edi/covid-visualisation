@@ -1,0 +1,10 @@
+<mat-form-field>
+  <mat-label>Date Range</mat-label>
+  <mat-date-range-input [min]="minDate" [max]="maxDate" [rangePicker]="rangepicker">
+    <input matStartDate [formControl]="startDateCtrl" (dateChange)="startDateChanged()" placeholder="Start Date">
+    <input matEndDate [formControl]="endDateCtrl" (dateChange)="endDateChanged()" placeholder="End Date">
+  </mat-date-range-input>
+  <mat-datepicker-toggle matSuffix [for]="rangepicker"></mat-datepicker-toggle>
+
+  <mat-date-range-picker (opened)="opened()" (closed)="closed()" #rangepicker></mat-date-range-picker>
+</mat-form-field>

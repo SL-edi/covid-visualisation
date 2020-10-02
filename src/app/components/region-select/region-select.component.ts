@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RegionSelectService } from '../../services/region-select.service';
 import { Region } from 'src/app/models/Region';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-region-select',
@@ -13,14 +14,15 @@ export class RegionSelectComponent implements OnInit {
 
   constructor(private regionService: RegionSelectService) {
     this.regions = regionService.regions;
-    this.selectedRegion = regionService.selectedRegion;
+    this.selectedRegion = regionService.getRegion();
+
+    regionService.getRegionObservable().subscribe(region => this.selectedRegion = region);
   }
 
-  onChange(value: Region): void {
-    this.regionService.setRegion(value);
+  selectionChange(event: MatSelectChange): void {
+    this.regionService.setRegion(event.value);
   }
-
+  
   ngOnInit(): void {
   }
-
 }
