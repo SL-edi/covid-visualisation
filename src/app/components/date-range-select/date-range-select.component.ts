@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
 import * as moment from 'moment';
+import { Moment } from 'moment';
 import { DateSelectService } from 'src/app/services/date-select.service';
 
 @Component({
@@ -16,7 +17,7 @@ export class DateRangeSelectComponent implements OnInit {
   maxDate = moment();
   isOpen = false;
 
-  constructor(private _adapter: DateAdapter<moment.Moment>,private dateSelectService: DateSelectService) {
+  constructor(private _adapter: DateAdapter<Moment>,private dateSelectService: DateSelectService) {
     this._adapter.setLocale(navigator.language)
     const { from, to } = dateSelectService.getDateRange();
     this.startDateCtrl.setValue(from);
